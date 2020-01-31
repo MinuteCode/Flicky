@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.minutecode.flicky.ui.home.HomeFragment"
+        android:name="com.minutecode.flicky.ui.search.SearchFragment"
         android:label="@string/title_search"
         tools:layout="@layout/fragment_home" />
 
