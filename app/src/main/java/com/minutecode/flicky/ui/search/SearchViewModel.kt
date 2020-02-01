@@ -20,8 +20,10 @@ class SearchViewModel : ViewModel() {
     }
     var text: LiveData<String> = _text
 
-    fun httpBinGet() {
+    private var _searchResults = MutableLiveData<List<Movie>>().apply {
+        value = listOf()
     }
+    var searchResults: LiveData<List<Movie>> = _searchResults
 
     fun omdbSearch(title: String, type: OmdbType) {
             Fuel.request(OmdbEndpoint.SearchFor(title = title, type = type))
