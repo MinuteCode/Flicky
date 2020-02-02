@@ -16,14 +16,14 @@ import com.minutecode.flicky.networking.endpoints.OmdbEndpoint
 class SearchViewModel : ViewModel() {
 
     private var _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+        value = "This is search Fragment"
     }
     var text: LiveData<String> = _text
 
-    private var _searchResults = MutableLiveData<List<Movie>>().apply {
-        value = listOf()
+    private var _searchResults = MutableLiveData<ArrayList<Movie>>().apply {
+        value = arrayListOf()
     }
-    var searchResults: LiveData<List<Movie>> = _searchResults
+    var searchResults: LiveData<ArrayList<Movie>> = _searchResults
 
     fun omdbSearch(title: String, type: OmdbType) {
             Fuel.request(OmdbEndpoint.SearchFor(title = title, type = type))
@@ -35,16 +35,19 @@ class SearchViewModel : ViewModel() {
                     is Result.Success -> {
                         val json = result.value.obj()
                         val movieResultArray = json.getJSONArray("Search")
-                        val movieArray: ArrayList<Movie> = ArrayList()
+                        val movieArray: ArrayList<Movie> = arrayListOf()
                         for (index in 0 until movieResultArray.length()) {
                             val movieResult = movieResultArray.getJSONObject(index)
                             movieArray.add(Movie(json = movieResult))
                         }
-                        Log.d("JSON Object", json.toString(2))
+                        _searchResults.value = movieArray
                     }
                 }
             }
     }
 
+    fun setSearchResults(to: ArrayList<Movie>) {
+        _searchResults.value = to
+    }
 
 }
