@@ -3,4 +3,7 @@
     <string name="title_search">Search</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+
+    <!-- SearchFragment -->
+    <string name="movie_search_hint">Search movie title</string>
 </resources>
