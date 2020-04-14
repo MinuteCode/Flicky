@@ -8,7 +8,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.minutecode.flicky.R
@@ -23,8 +23,7 @@ class SearchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        searchViewModel =
-                ViewModelProviders.of(this).get(SearchViewModel::class.java)
+        searchViewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
 
         val root = inflater.inflate(R.layout.fragment_search, container, false)
         val textView: TextView = root.findViewById(R.id.text_home)
@@ -43,9 +42,11 @@ class SearchFragment : Fragment() {
             layoutManager = searchResultsViewManager
             adapter = searchResultsAdapter
         }
+
         searchViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
+
         searchViewModel.searchResults.observe(viewLifecycleOwner, Observer {
             if (it.size > 0) {
                 textView.visibility = View.INVISIBLE
