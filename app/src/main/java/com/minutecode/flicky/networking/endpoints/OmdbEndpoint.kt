@@ -11,6 +11,7 @@ sealed class OmdbEndpoint: FuelRouting {
     override val basePath: String = "https://www.omdbapi.com/?apikey=7a8a12b"
 
     class SearchFor(val title: String, val type: OmdbType): OmdbEndpoint()
+    class DetailsFor(val imdbId: String): OmdbEndpoint()
 
     override val headers: Map<String, HeaderValues>?
         get() {
@@ -22,6 +23,7 @@ sealed class OmdbEndpoint: FuelRouting {
         get() {
             return when(this) {
                 is SearchFor -> listOf("s" to title, "type" to type.type)
+                is DetailsFor -> listOf("i" to imdbId, "plot" to "full")
             }
         }
     override val path: String

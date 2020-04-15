@@ -6,4 +6,9 @@
 
     <!-- SearchFragment -->
     <string name="movie_search_hint">Search movie title</string>
+    <string name="menu_item_search">Search</string>
+
+    <!-- Search ResultDetail -->
+    <string name="result_detail_activity_title">Détails</string>
+    <string name="plot_title">Plot</string>
 </resources>

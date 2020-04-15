@@ -5,8 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.core.Parameters
-import com.github.kittinunf.fuel.gson.responseObject
 import com.github.kittinunf.fuel.json.responseJson
 import com.github.kittinunf.result.Result
 import com.minutecode.flicky.model.omdb.Movie
@@ -14,7 +12,6 @@ import com.minutecode.flicky.model.omdb.OmdbType
 import com.minutecode.flicky.networking.endpoints.OmdbEndpoint
 
 class SearchViewModel : ViewModel() {
-
     private var _text = MutableLiveData<String>().apply {
         value = "This is search Fragment"
     }
@@ -25,11 +22,14 @@ class SearchViewModel : ViewModel() {
     }
     var searchResults: LiveData<ArrayList<Movie>> = _searchResults
 
+    private lateinit var searchListener: SearchListener
+
     fun omdbSearch(title: String, type: OmdbType) {
             Fuel.request(OmdbEndpoint.SearchFor(title = title, type = type))
             .responseJson { _, _, result ->
                 when(result) {
                     is Result.Failure -> {
+                        searchListener.searchFailure()
                         Log.e("Search error", result.getException().localizedMessage ?: "No exception")
                     }
                     is Result.Success -> {
@@ -40,6 +40,7 @@ class SearchViewModel : ViewModel() {
                             val movieResult = movieResultArray.getJSONObject(index)
                             movieArray.add(Movie(json = movieResult))
                         }
+                        searchListener.searchSuccess(movieArray)
                         _searchResults.value = movieArray
                     }
                 }
@@ -50,4 +51,12 @@ class SearchViewModel : ViewModel() {
         _searchResults.value = to
     }
 
+    fun setSearchListener(to: SearchListener) {
+        searchListener = to
+    }
+}
+
+interface SearchListener {
+    fun searchSuccess(results: ArrayList<Movie>)
+    fun searchFailure()
 }

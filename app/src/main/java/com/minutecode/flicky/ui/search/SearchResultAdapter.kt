@@ -1,5 +1,6 @@
 package com.minutecode.flicky.ui.search
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.minutecode.flicky.R
 import com.minutecode.flicky.model.omdb.Movie
+import com.minutecode.flicky.ui.result_detail.ResultDetailActivity
 
 class SearchResultAdapter(private var dataSet: ArrayList<Movie>): RecyclerView.Adapter<SearchResultAdapter.SearchResultViewHolder>() {
     class SearchResultViewHolder(searchResultView: View): RecyclerView.ViewHolder(searchResultView) {
@@ -28,13 +30,19 @@ class SearchResultAdapter(private var dataSet: ArrayList<Movie>): RecyclerView.A
     override fun onBindViewHolder(holder: SearchResultViewHolder, position: Int) {
         holder.resultTitle.text = dataSet[position].title
         holder.resultYear.text = dataSet[position].year.toString()
+        holder.itemView.setOnClickListener {
+            val detailIntent = Intent(holder.itemView.context, ResultDetailActivity::class.java).apply {
+                putExtra("movie", dataSet[position])
+            }
+            holder.itemView.context.startActivity(detailIntent)
+        }
     }
 
     override fun getItemCount(): Int {
         return dataSet.size
     }
 
-    public fun setDataSet(to: ArrayList<Movie>) {
+    fun setDataSet(to: ArrayList<Movie>) {
         dataSet = to
     }
 }
