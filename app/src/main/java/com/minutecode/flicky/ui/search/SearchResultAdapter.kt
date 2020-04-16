@@ -4,8 +4,10 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.minutecode.flicky.R
 import com.minutecode.flicky.model.omdb.Movie
 import com.minutecode.flicky.ui.result_detail.ResultDetailActivity
@@ -14,6 +16,7 @@ class SearchResultAdapter(private var dataSet: ArrayList<Movie>): RecyclerView.A
     class SearchResultViewHolder(searchResultView: View): RecyclerView.ViewHolder(searchResultView) {
         lateinit var resultTitle: TextView
         lateinit var resultYear: TextView
+        lateinit var resultPoster: ImageView
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchResultViewHolder {
@@ -23,6 +26,7 @@ class SearchResultAdapter(private var dataSet: ArrayList<Movie>): RecyclerView.A
 
         searchResultLine.resultTitle = rootLayout.findViewById(R.id.result_title)
         searchResultLine.resultYear = rootLayout.findViewById(R.id.result_year)
+        searchResultLine.resultPoster = rootLayout.findViewById(R.id.result_image)
 
         return searchResultLine
     }
@@ -30,6 +34,8 @@ class SearchResultAdapter(private var dataSet: ArrayList<Movie>): RecyclerView.A
     override fun onBindViewHolder(holder: SearchResultViewHolder, position: Int) {
         holder.resultTitle.text = dataSet[position].title
         holder.resultYear.text = dataSet[position].year.toString()
+        Glide.with(holder.itemView).load(dataSet[position].poster).into(holder.resultPoster)
+
         holder.itemView.setOnClickListener {
             val detailIntent = Intent(holder.itemView.context, ResultDetailActivity::class.java).apply {
                 putExtra("movie", dataSet[position])
