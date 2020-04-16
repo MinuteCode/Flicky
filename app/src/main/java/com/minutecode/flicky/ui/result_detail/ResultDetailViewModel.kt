@@ -10,7 +10,7 @@ import com.github.kittinunf.result.Result
 import com.minutecode.flicky.model.omdb.Movie
 import com.minutecode.flicky.networking.endpoints.OmdbEndpoint
 
-class ResultDetailViewModel(private val movie: Movie) : ViewModel() {
+class ResultDetailViewModel(val movie: Movie) : ViewModel() {
     private var _movieTitle = MutableLiveData<String>().apply {
         value = movie.title
     }

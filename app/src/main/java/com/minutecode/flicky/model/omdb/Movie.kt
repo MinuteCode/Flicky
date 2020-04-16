@@ -28,6 +28,16 @@ data class Movie(val title: String, val year: Int, val imdbId: String, val type:
         parcel.writeString(poster)
     }
 
+    fun asHashMap(): HashMap<String, Any> {
+        return hashMapOf(
+            "title" to title,
+            "year" to year,
+            "imdbId" to imdbId,
+            "type" to type,
+            "poster" to poster
+        )
+    }
+
     override fun describeContents(): Int {
         return 0
     }

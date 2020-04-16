@@ -11,4 +11,5 @@
     <!-- Search ResultDetail -->
     <string name="result_detail_activity_title">Détails</string>
     <string name="plot_title">Plot</string>
+    <string name="add_movie_library">Add to library</string>
 </resources>

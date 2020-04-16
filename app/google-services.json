@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "537608121727",
+    "firebase_url": "https://flicky-33be5.firebaseio.com",
+    "project_id": "flicky-33be5",
+    "storage_bucket": "flicky-33be5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:537608121727:android:c84ef2b25a1e06011e3e4a",
+        "android_client_info": {
+          "package_name": "com.minutecode.flicky"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "537608121727-rccvvk0pvfu7cf7v5kbmt2c00jk2ft8a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2CrDJ2zClU09ikczfkQj9lMWoO016-Ts"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "537608121727-rccvvk0pvfu7cf7v5kbmt2c00jk2ft8a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
