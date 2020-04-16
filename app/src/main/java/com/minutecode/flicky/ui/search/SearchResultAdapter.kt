@@ -34,7 +34,12 @@ class SearchResultAdapter(private var dataSet: ArrayList<Movie>): RecyclerView.A
     override fun onBindViewHolder(holder: SearchResultViewHolder, position: Int) {
         holder.resultTitle.text = dataSet[position].title
         holder.resultYear.text = dataSet[position].year.toString()
-        Glide.with(holder.itemView).load(dataSet[position].poster).into(holder.resultPoster)
+        holder.resultPoster.scaleType = ImageView.ScaleType.CENTER_CROP
+        Glide.with(holder.itemView)
+            .load(dataSet[position].poster)
+            .fallback(R.drawable.ic_broken_image_black_24dp)
+            .centerInside()
+            .into(holder.resultPoster)
 
         holder.itemView.setOnClickListener {
             val detailIntent = Intent(holder.itemView.context, ResultDetailActivity::class.java).apply {

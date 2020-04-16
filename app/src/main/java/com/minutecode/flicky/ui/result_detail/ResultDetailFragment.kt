@@ -42,8 +42,11 @@ class ResultDetailFragment : Fragment() {
             movieTitle.text = it
         })
         viewModel.moviePoster.observe(viewLifecycleOwner, Observer {
-            moviePoster.scaleType = ImageView.ScaleType.CENTER_CROP
-            Glide.with(this).load(it).into(moviePoster)
+            Glide.with(this)
+                .load(it)
+                .fallback(R.drawable.ic_broken_image_black_24dp)
+                .centerInside()
+                .into(moviePoster)
         })
         viewModel.movieYear.observe(viewLifecycleOwner, Observer {
             movieYear.text = String.format("%d", it)
