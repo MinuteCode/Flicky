@@ -13,9 +13,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.github.kittinunf.fuel.core.FuelError
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.minutecode.flicky.R
 import com.minutecode.flicky.model.omdb.Movie
 
@@ -60,16 +57,6 @@ class ResultDetailFragment : Fragment() {
         })
         setHasOptionsMenu(true)
 
-        Firebase.firestore.collection("UserMovies")
-            .whereEqualTo("userId", FirebaseAuth.getInstance().currentUser!!.uid)
-            .whereEqualTo("title", viewModel.movie.title)
-            .get()
-            .addOnSuccessListener { query ->
-                if (query.documents.isNotEmpty()) {
-                    canAddMovieToLibrary = false
-                }
-            }
-
         val root = inflater.inflate(R.layout.result_detail_fragment, container, false)
         val movieTitle: TextView = root.findViewById(R.id.movie_title)
         val movieYear: TextView = root.findViewById(R.id.movie_year)
@@ -108,6 +95,7 @@ class ResultDetailFragment : Fragment() {
         })
 
         viewModel.retrieveMovieDetail()
+        viewModel.retrieveUserDocPath()
         return root
     }
 

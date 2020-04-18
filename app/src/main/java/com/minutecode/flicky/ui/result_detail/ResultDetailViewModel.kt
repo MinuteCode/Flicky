@@ -9,6 +9,7 @@ import com.github.kittinunf.fuel.core.FuelError
 import com.github.kittinunf.fuel.json.responseJson
 import com.github.kittinunf.result.Result
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.minutecode.flicky.model.omdb.FullMovie
@@ -21,6 +22,7 @@ class ResultDetailViewModel(var movie: FullMovie) : ViewModel() {
     private lateinit var listener: ResultDetailListener
 
     private var firestore = Firebase.firestore
+    private lateinit var userDocumentPath: String
 
     private var _movieTitle = MutableLiveData<String>().apply {
         value = movie.title
@@ -71,15 +73,25 @@ class ResultDetailViewModel(var movie: FullMovie) : ViewModel() {
             }
     }
 
+    fun retrieveUserDocPath() {
+        firestore.collection("Users")
+            .whereEqualTo("authId", FirebaseAuth.getInstance().currentUser!!.uid)
+            .get()
+            .addOnSuccessListener { query ->
+                userDocumentPath = query.documents[0].reference.path
+            }
+    }
+
     fun addResultToLibrary() {
         if (canAddMovieToLibrary()) {
             val userMovie = UserMovie(FirebaseAuth.getInstance().currentUser!!.uid, movie)
             Log.d(TAG, "Add movie to library $userMovie")
             firestore
-                .collection("UserMovies")
-                .add(userMovie.asHashMap())
-                .addOnSuccessListener { docRef ->
-                    Log.d(TAG, "DocumentSnapshot added with ID: ${docRef.id}")
+                .collection("Users")
+                .document(FirebaseAuth.getInstance().currentUser!!.uid)
+                .update("movies", FieldValue.arrayUnion(movie.asHashMap()))
+                .addOnSuccessListener {
+                    Log.d(TAG, "DocumentSnapshot added with ID: ")
                     listener.addToLibrarySuccessful()
                 }
                 .addOnFailureListener { e ->
@@ -91,9 +103,9 @@ class ResultDetailViewModel(var movie: FullMovie) : ViewModel() {
 
     private fun canAddMovieToLibrary(): Boolean {
         var canAdd = true
-        firestore.collection("UserMovies")
-            .whereEqualTo("userId", FirebaseAuth.getInstance().currentUser!!.uid)
-            .whereEqualTo("title", movie.title)
+        firestore.collection("Users")
+            .whereEqualTo("d", FirebaseAuth.getInstance().currentUser!!.uid)
+            .whereArrayContains("movies", movie.asHashMap())
             .get()
             .addOnSuccessListener { query ->
                 canAdd = query.documents.isEmpty()

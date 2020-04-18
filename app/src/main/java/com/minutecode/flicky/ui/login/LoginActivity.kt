@@ -8,12 +8,16 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.minutecode.flicky.MainActivity
 import com.minutecode.flicky.R
+import com.minutecode.flicky.model.user.User
 
 class LoginActivity : AppCompatActivity() {
     private val TAG = "LoginActivity"
     private lateinit var firebaseAuth: FirebaseAuth
+    private val firestore = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +42,9 @@ class LoginActivity : AppCompatActivity() {
                     .createUserWithEmailAndPassword(emailEditText.text.toString(), passwordEditText.text.toString())
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
+                            Firebase.firestore.collection("Users")
+                                .document(task.result!!.user!!.uid)
+                                .set(User(task.result!!.user!!.uid, setOf(), null, null, null))
                             startMainActivity()
                         } else {
                             Snackbar
@@ -63,8 +70,31 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        firebaseAuth.currentUser?.let {
-            startMainActivity()
+        firebaseAuth.currentUser?.let { user ->
+            firestore.collection("Users")
+                .document(FirebaseAuth.getInstance().currentUser!!.uid)
+                .get()
+                .addOnSuccessListener { snapshot ->
+                    if (!snapshot.exists()) {
+                        firestore.collection("Users")
+                            .document(FirebaseAuth.getInstance().currentUser!!.uid)
+                            .set(
+                                User(
+                                    user.uid,
+                                    setOf(),
+                                    user.displayName,
+                                    user.email,
+                                    user.phoneNumber
+                                ).storeFormat)
+                            .addOnCompleteListener {
+                                if (it.isSuccessful) {
+                                    startMainActivity()
+                                }
+                            }
+                    } else {
+                        startMainActivity()
+                    }
+                }
         }
     }
 
