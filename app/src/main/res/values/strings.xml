@@ -12,4 +12,8 @@
     <string name="result_detail_activity_title">Détails</string>
     <string name="plot_title">Plot</string>
     <string name="add_movie_library">Add to library</string>
+    <plurals name="number_of_genres">
+        <item quantity="one">Genre</item>
+        <item quantity="other">Genres</item>
+    </plurals>
 </resources>

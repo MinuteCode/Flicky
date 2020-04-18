@@ -1,5 +1,6 @@
 package com.minutecode.flicky.model.omdb
 
+import com.minutecode.flicky.networking.endpoints.OmdbEndpoint
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -12,11 +13,11 @@ open class FullMovie(
     override val imdbId: String,
     override val type: OmdbType,
     override val poster: String) : Movie(title, year, imdbId, type, poster) {
-    var genre: Set<OmdbGenre> = setOf()
+    var genre: Set<String> = setOf() //TODO: Map the genres to an OmdbGenre
         get() = field
     var rated: String = ""
         get() = field
-    var releaseDate: Date = Date()
+    var releaseDate: Date? = null
         get() = field
     var runtime: Int = 0
         get() = field
@@ -36,13 +37,13 @@ open class FullMovie(
         get() = field
     var ratings: List<Pair<String, String>> = arrayListOf()
         get() = field
-    var metascore: Int = 0
+    var metascore: Int? = null
         get() = field
     var imdbRating: Float = 0f
         get() = field
     var imdbVotes: Int = 0
         get() = field
-    var dvdReleaseDate: Date = Date()
+    var dvdReleaseDate: Date? = null
         get() = field
     var boxOffice: Double = 0.0
         get() = field
@@ -51,9 +52,9 @@ open class FullMovie(
     var website: String = ""
         get() = field
 
-    constructor(genre: Set<OmdbGenre>,
+    constructor(genre: Set<String>,
                 rated: String,
-                releaseDate: Date,
+                releaseDate: Date?,
                 runtime: Int,
                 director: String,
                 writer: String,
@@ -63,10 +64,10 @@ open class FullMovie(
                 country: Set<String>,
                 awards: String,
                 ratings: List<Pair<String, String>>,
-                metascore: Int,
+                metascore: Int?,
                 imdbRating: Float,
                 imdbVotes: Int,
-                dvdReleaseDate: Date,
+                dvdReleaseDate: Date?,
                 boxOffice: Double,
                 production: String,
                 website: String,
@@ -93,13 +94,14 @@ open class FullMovie(
     }
 
     constructor(json: JSONObject, movie: Movie) : this(
-        genre = json.getString("Genre").split(",").let {
+        genre = HashSet<String>(json.getString("Genre").split(","))/*.let {
             val genres: MutableSet<OmdbGenre> = mutableSetOf()
             for (genre: String in it) {
-                genres.add(OmdbGenre.valueOf(genre.replace(" ", "").toLowerCase(Locale.ROOT)))
+                val omdbGenre = OmdbGenre.valueOf(genre.replace(" ", "").toLowerCase(Locale.ROOT)) ?: genre
+                genres.add()
             }
             genres
-        },
+        }*/,
         rated = json.getString("Rated"),
         releaseDate = SimpleDateFormat("dd MMM YYYY").parse(json.getString("Released")),
         runtime = json.getString("Runtime").replace(" min", "").toInt(),
@@ -118,7 +120,7 @@ open class FullMovie(
         awards = json.getString("Awards"),
         ratings = json.getJSONArray("Ratings").let { jsonArray: JSONArray ->
             val ratings: ArrayList<Pair<String, String>> = arrayListOf()
-            for (index in 0 .. jsonArray.length() - 1) {
+            for (index in 0 until jsonArray.length()) {
                 val ratingPair = Pair<String, String>(
                     jsonArray.getJSONObject(index).getString("Source"),
                     jsonArray.getJSONObject(index).getString("Value")
@@ -127,11 +129,20 @@ open class FullMovie(
             }
             ratings
         },
-        metascore = json.getString("Metascore").toInt(),
+        metascore = json.getString("Metascore").let {
+            if (it == OmdbEndpoint.OmdbValues.noValue.value) { null }
+            else { it.toInt() }
+        },
         imdbRating = json.getString("imdbRating").toFloat(),
         imdbVotes = json.getString("imdbVotes").replace(",", "").toInt(),
-        dvdReleaseDate = SimpleDateFormat("dd MMM YYYY").parse(json.getString("DVD")),
-        boxOffice = json.getString("BoxOffice").replace(",","").replace("$", "").toDouble(),
+        dvdReleaseDate = json.getString("DVD").let {
+            if (it == OmdbEndpoint.OmdbValues.noValue.value) { null }
+            else { SimpleDateFormat("dd MMM YYYY").parse(json.getString("DVD")) }
+        },
+        boxOffice = json.getString("BoxOffice").let {
+            if (it == "N/A") { 0.0 }
+            else { it.replace(",","").replace("$", "").toDouble() }
+        },
         production = json.getString("Production"),
         website = json.getString("Website"),
         movie = movie
@@ -141,7 +152,7 @@ open class FullMovie(
         val hashMap = super.asHashMap()
         hashMap["genre"] = genre
         hashMap["rated"] = rated
-        hashMap["releaseDate"] = releaseDate
+        hashMap["releaseDate"] = releaseDate ?: ""
         hashMap["runtime"] = runtime
         hashMap["director"] = director
         hashMap["writer"] = writer
@@ -151,10 +162,10 @@ open class FullMovie(
         hashMap["country"] = country
         hashMap["awards"] = awards
         hashMap["ratings"] = ratings
-        hashMap["metascore"] = metascore
+        hashMap["metascore"] = metascore ?: ""
         hashMap["imdbRating"] = imdbRating
         hashMap["imdbVotes"] = imdbVotes
-        hashMap["dvdReleaseDate"] = dvdReleaseDate
+        hashMap["dvdReleaseDate"] = dvdReleaseDate ?: ""
         hashMap["boxOffice"] = boxOffice
         hashMap["production"] = production
         hashMap["website"] = website

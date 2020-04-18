@@ -12,7 +12,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.minutecode.flicky.model.omdb.FullMovie
 import com.minutecode.flicky.model.omdb.Movie
-import com.minutecode.flicky.model.omdb.OmdbGenre
 import com.minutecode.flicky.model.omdb.UserMovie
 import com.minutecode.flicky.networking.endpoints.OmdbEndpoint
 
@@ -41,10 +40,10 @@ class ResultDetailViewModel(val movie: Movie) : ViewModel() {
     }
     var moviePlot: LiveData<String> = _moviePlot
 
-    private var _movieGenres = MutableLiveData<Set<OmdbGenre>>().apply {
-        value = setOf(OmdbGenre.adventure)
+    private var _movieGenres = MutableLiveData<Set<String>>().apply {
+        value = setOf("")
     }
-    var movieGenre: LiveData<Set<OmdbGenre>> = _movieGenres
+    var movieGenre: LiveData<Set<String>> = _movieGenres
 
     fun setListener(listener: ResultDetailListener) {
         this.listener = listener

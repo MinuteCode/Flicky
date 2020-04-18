@@ -7,77 +7,105 @@
     android:layout_height="match_parent"
     tools:context=".ui.result_detail.ResultDetailActivity">
 
-    <ImageView
-        android:id="@+id/movie_poster"
-        android:layout_width="90dp"
-        android:layout_height="150dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:scaleType="center"
-        android:src="@android:drawable/ic_menu_report_image"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="30dp"
+        tools:layout_editor_absoluteY="148dp">
 
-    <TextView
-        android:id="@+id/movie_title"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
-        android:text="TextView"
-        android:textIsSelectable="true"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/movie_year"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/movie_poster"
-        app:layout_constraintTop_toTopOf="@+id/movie_poster" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/movie_year"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="bottom"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/movie_poster"
-        app:layout_constraintEnd_toEndOf="@+id/movie_title"
-        app:layout_constraintStart_toStartOf="@+id/movie_title" />
+            <TextView
+                android:id="@+id/movie_year"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="bottom"
+                android:text="TextView"
+                app:layout_constraintBottom_toBottomOf="@+id/movie_poster"
+                app:layout_constraintStart_toStartOf="@+id/movie_title" />
 
-    <TextView
-        android:id="@+id/plot_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/plot_title"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/movie_poster"
-        app:layout_constraintTop_toBottomOf="@+id/movie_poster" />
+            <TextView
+                android:id="@+id/movie_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="TextView"
+                android:textIsSelectable="true"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/movie_poster"
+                app:layout_constraintTop_toTopOf="@+id/movie_poster" />
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/separator_line"
-        app:layout_constraintBottom_toBottomOf="@+id/plot_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/plot_title"
-        app:layout_constraintTop_toTopOf="@+id/plot_title">
+            <ImageView
+                android:id="@+id/movie_poster"
+                android:layout_width="90dp"
+                android:layout_height="150dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:scaleType="center"
+                android:src="@android:drawable/ic_menu_report_image"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    </FrameLayout>
+            <TextView
+                android:id="@+id/plot_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/plot_title"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/movie_poster"
+                app:layout_constraintTop_toBottomOf="@+id/movie_poster" />
 
-    <TextView
-        android:id="@+id/movie_plot"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/frameLayout"
-        app:layout_constraintStart_toStartOf="@+id/plot_title"
-        app:layout_constraintTop_toBottomOf="@+id/plot_title" />
+            <FrameLayout
+                android:id="@+id/frameLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/separator_line"
+                app:layout_constraintBottom_toBottomOf="@+id/plot_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/plot_title"
+                app:layout_constraintTop_toTopOf="@+id/plot_title">
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/movie_plot"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="TextView"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/plot_title"
+                app:layout_constraintTop_toBottomOf="@+id/plot_title" />
+
+            <LinearLayout
+                android:id="@+id/genre_layout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:dividerPadding="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/movie_year"
+                app:layout_constraintEnd_toEndOf="@+id/movie_title"
+                app:layout_constraintStart_toStartOf="@+id/movie_title"
+                app:layout_constraintTop_toBottomOf="@+id/movie_title"
+                app:layout_constraintVertical_bias="0.0">
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

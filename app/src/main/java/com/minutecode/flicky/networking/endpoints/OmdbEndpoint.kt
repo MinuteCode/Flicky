@@ -32,4 +32,8 @@ sealed class OmdbEndpoint: FuelRouting {
         get() = null
     override val bytes: ByteArray?
         get() = null
+
+    enum class OmdbValues(val value: String) {
+        noValue("N/A")
+    }
 }

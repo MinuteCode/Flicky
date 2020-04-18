@@ -1,9 +1,11 @@
 package com.minutecode.flicky.ui.result_detail
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -27,6 +29,7 @@ class ResultDetailFragment : Fragment() {
 
     private lateinit var viewModel: ResultDetailViewModel
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,6 +60,7 @@ class ResultDetailFragment : Fragment() {
         val movieYear: TextView = root.findViewById(R.id.movie_year)
         val moviePoster: ImageView = root.findViewById(R.id.movie_poster)
         val moviePlot: TextView = root.findViewById(R.id.movie_plot)
+        val genreLayout: LinearLayout = root.findViewById(R.id.genre_layout)
 
         viewModel.movieTitle.observe(viewLifecycleOwner, Observer {
             movieTitle.text = it
@@ -73,6 +77,19 @@ class ResultDetailFragment : Fragment() {
         })
         viewModel.moviePlot.observe(viewLifecycleOwner, Observer {
             moviePlot.text = it
+        })
+        viewModel.movieGenre.observe(viewLifecycleOwner, Observer {
+            genreLayout.removeAllViews()
+            val genreTitle = TextView(this.activity)
+            genreTitle.text = resources.getQuantityString(R.plurals.number_of_genres, it.size) + " :"
+            genreLayout.addView(genreTitle)
+
+            for (genre: String in it) {
+                val genreTextView = TextView(this.activity)
+                genreTextView.setPadding(8,0,0,0)
+                genreTextView.text = genre
+                genreLayout.addView(genreTextView)
+            }
         })
 
         viewModel.retrieveMovieDetail()
