@@ -12,12 +12,17 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.github.kittinunf.fuel.core.FuelError
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.minutecode.flicky.R
 import com.minutecode.flicky.model.omdb.Movie
 
 class ResultDetailFragment : Fragment() {
 
     private val TAG = "ResultDetailFragment"
+    private var canAddMovieToLibrary = true
 
     companion object {
         fun newInstance(arguments: Bundle): Fragment {
@@ -54,6 +59,16 @@ class ResultDetailFragment : Fragment() {
             }
         })
         setHasOptionsMenu(true)
+
+        Firebase.firestore.collection("UserMovies")
+            .whereEqualTo("userId", FirebaseAuth.getInstance().currentUser!!.uid)
+            .whereEqualTo("title", viewModel.movie.title)
+            .get()
+            .addOnSuccessListener { query ->
+                if (query.documents.isNotEmpty()) {
+                    canAddMovieToLibrary = false
+                }
+            }
 
         val root = inflater.inflate(R.layout.result_detail_fragment, container, false)
         val movieTitle: TextView = root.findViewById(R.id.movie_title)
@@ -103,7 +118,14 @@ class ResultDetailFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.add_movie_library -> viewModel.addResultToLibrary()
+            R.id.add_movie_library -> {
+                if (canAddMovieToLibrary) viewModel.addResultToLibrary()
+                else {
+                    Snackbar
+                        .make(activity!!.findViewById(R.id.container), "Movie already in library !", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
+            }
         }
         return true
     }

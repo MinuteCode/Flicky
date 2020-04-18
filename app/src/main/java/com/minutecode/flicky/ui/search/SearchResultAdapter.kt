@@ -1,6 +1,5 @@
 package com.minutecode.flicky.ui.search
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.minutecode.flicky.R
 import com.minutecode.flicky.model.omdb.Movie
-import com.minutecode.flicky.ui.result_detail.ResultDetailActivity
 
 class SearchResultAdapter(private var dataSet: ArrayList<Movie>): RecyclerView.Adapter<SearchResultAdapter.SearchResultViewHolder>() {
+    private lateinit var clickListener: OnResultClickListener
+
     class SearchResultViewHolder(searchResultView: View): RecyclerView.ViewHolder(searchResultView) {
         lateinit var resultTitle: TextView
         lateinit var resultYear: TextView
@@ -42,10 +42,7 @@ class SearchResultAdapter(private var dataSet: ArrayList<Movie>): RecyclerView.A
             .into(holder.resultPoster)
 
         holder.itemView.setOnClickListener {
-            val detailIntent = Intent(holder.itemView.context, ResultDetailActivity::class.java).apply {
-                putExtra("movie", dataSet[position])
-            }
-            holder.itemView.context.startActivity(detailIntent)
+            clickListener.resultClick(dataSet, position)
         }
     }
 
@@ -56,4 +53,12 @@ class SearchResultAdapter(private var dataSet: ArrayList<Movie>): RecyclerView.A
     fun setDataSet(to: ArrayList<Movie>) {
         dataSet = to
     }
+
+    fun setClickListener(listener: OnResultClickListener) {
+        this.clickListener = listener
+    }
+}
+
+interface OnResultClickListener {
+    fun resultClick(dataset: List<Movie>, position: Int)
 }

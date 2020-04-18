@@ -12,6 +12,29 @@ class UserMovie(
         this.userId = userId
     }
 
+    constructor(userId: String, fullMovie: FullMovie): this(fullMovie.title, fullMovie.year, fullMovie.imdbId, fullMovie.type, fullMovie.poster) {
+        genre = fullMovie.genre
+        rated = fullMovie.rated
+        releaseDate = fullMovie.releaseDate
+        runtime = fullMovie.runtime
+        director = fullMovie.director
+        writer = fullMovie.writer
+        actors = fullMovie.actors
+        plot = fullMovie.plot
+        language = fullMovie.language
+        country = fullMovie.country
+        awards = fullMovie.awards
+        ratings = fullMovie.ratings
+        metascore = fullMovie.metascore
+        imdbRating = fullMovie.imdbRating
+        dvdReleaseDate = fullMovie.dvdReleaseDate
+        boxOffice = fullMovie.boxOffice
+        imdbVotes = fullMovie.imdbVotes
+        production = fullMovie.production
+        website = fullMovie.website
+        this.userId = userId
+    }
+
     override fun asHashMap(): HashMap<String, Any> {
         val movieHashMap = super.asHashMap()
         movieHashMap["userId"] = userId

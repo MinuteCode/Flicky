@@ -1,5 +1,6 @@
 package com.minutecode.flicky.model.omdb
 
+import android.annotation.SuppressLint
 import com.minutecode.flicky.networking.endpoints.OmdbEndpoint
 import org.json.JSONArray
 import org.json.JSONObject
@@ -93,15 +94,9 @@ open class FullMovie(
         this.website = website
     }
 
+    @SuppressLint("SimpleDateFormat")
     constructor(json: JSONObject, movie: Movie) : this(
-        genre = HashSet<String>(json.getString("Genre").split(","))/*.let {
-            val genres: MutableSet<OmdbGenre> = mutableSetOf()
-            for (genre: String in it) {
-                val omdbGenre = OmdbGenre.valueOf(genre.replace(" ", "").toLowerCase(Locale.ROOT)) ?: genre
-                genres.add()
-            }
-            genres
-        }*/,
+        genre = HashSet<String>(json.getString("Genre").split(",")),
         rated = json.getString("Rated"),
         releaseDate = SimpleDateFormat("dd MMM YYYY").parse(json.getString("Released")),
         runtime = json.getString("Runtime").replace(" min", "").toInt(),
@@ -150,7 +145,7 @@ open class FullMovie(
 
     override fun asHashMap(): HashMap<String, Any> {
         val hashMap = super.asHashMap()
-        hashMap["genre"] = genre
+        hashMap["genre"] = ArrayList(genre)
         hashMap["rated"] = rated
         hashMap["releaseDate"] = releaseDate ?: ""
         hashMap["runtime"] = runtime
@@ -159,7 +154,7 @@ open class FullMovie(
         hashMap["actors"] = actors
         hashMap["plot"] = plot
         hashMap["language"] = language
-        hashMap["country"] = country
+        hashMap["country"] = ArrayList(country)
         hashMap["awards"] = awards
         hashMap["ratings"] = ratings
         hashMap["metascore"] = metascore ?: ""

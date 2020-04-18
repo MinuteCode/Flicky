@@ -16,4 +16,10 @@
         <item quantity="one">Genre</item>
         <item quantity="other">Genres</item>
     </plurals>
+
+    <!-- Login -->
+    <string name="email">Email</string>
+    <string name="password">Mot de passe</string>
+    <string name="connection">Connexion</string>
+    <string name="register">Créer le compte</string>
 </resources>

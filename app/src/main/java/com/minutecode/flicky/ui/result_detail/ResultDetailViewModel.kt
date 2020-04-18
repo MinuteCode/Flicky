@@ -8,17 +8,19 @@ import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.FuelError
 import com.github.kittinunf.fuel.json.responseJson
 import com.github.kittinunf.result.Result
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.minutecode.flicky.model.omdb.FullMovie
-import com.minutecode.flicky.model.omdb.Movie
 import com.minutecode.flicky.model.omdb.UserMovie
 import com.minutecode.flicky.networking.endpoints.OmdbEndpoint
 
-class ResultDetailViewModel(val movie: Movie) : ViewModel() {
+class ResultDetailViewModel(var movie: FullMovie) : ViewModel() {
     private val TAG = "ResultDetailViewModel"
 
     private lateinit var listener: ResultDetailListener
+
+    private var firestore = Firebase.firestore
 
     private var _movieTitle = MutableLiveData<String>().apply {
         value = movie.title
@@ -59,8 +61,8 @@ class ResultDetailViewModel(val movie: Movie) : ViewModel() {
                     }
                     is Result.Success -> {
                         val json = result.value.obj()
-                        val fullMovie = FullMovie(json, movie)
-                        _movieGenres.value = fullMovie.genre
+                        movie = FullMovie(json, movie)
+                        _movieGenres.value = movie.genre
                         _moviePlot.value = json.getString("Plot")
                         _moviePoster.value = json.getString("Poster")
                         listener.detailRetrieveSuccessful()
@@ -70,19 +72,33 @@ class ResultDetailViewModel(val movie: Movie) : ViewModel() {
     }
 
     fun addResultToLibrary() {
-        val userMovie = UserMovie("123456789", movie)
-        Log.d(TAG, "Add movie to library $userMovie")
-        Firebase.firestore
-            .collection("Movies")
-            .add(userMovie.asHashMap())
-            .addOnSuccessListener { docRef ->
-                Log.d(TAG, "DocumentSnapshot added with ID: ${docRef.id}")
-                listener.addToLibrarySuccessful()
+        if (canAddMovieToLibrary()) {
+            val userMovie = UserMovie(FirebaseAuth.getInstance().currentUser!!.uid, movie)
+            Log.d(TAG, "Add movie to library $userMovie")
+            firestore
+                .collection("UserMovies")
+                .add(userMovie.asHashMap())
+                .addOnSuccessListener { docRef ->
+                    Log.d(TAG, "DocumentSnapshot added with ID: ${docRef.id}")
+                    listener.addToLibrarySuccessful()
+                }
+                .addOnFailureListener { e ->
+                    Log.e(TAG, "Error adding document", e)
+                    listener.addToLibraryFailure(e)
+                }
+        }
+    }
+
+    private fun canAddMovieToLibrary(): Boolean {
+        var canAdd = true
+        firestore.collection("UserMovies")
+            .whereEqualTo("userId", FirebaseAuth.getInstance().currentUser!!.uid)
+            .whereEqualTo("title", movie.title)
+            .get()
+            .addOnSuccessListener { query ->
+                canAdd = query.documents.isEmpty()
             }
-            .addOnFailureListener { e ->
-                Log.w(TAG, "Error adding document", e)
-                listener.addToLibraryFailure(e)
-            }
+        return canAdd
     }
 }
 

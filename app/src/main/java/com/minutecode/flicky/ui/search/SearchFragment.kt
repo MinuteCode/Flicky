@@ -3,6 +3,7 @@ package com.minutecode.flicky.ui.search
 import android.app.Activity
 import android.app.SearchManager
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.minutecode.flicky.R
 import com.minutecode.flicky.model.omdb.Movie
 import com.minutecode.flicky.model.omdb.OmdbType
+import com.minutecode.flicky.ui.result_detail.ResultDetailActivity
 
 class SearchFragment : Fragment() {
 
@@ -32,15 +34,6 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         searchViewModel = ViewModelProvider(this).get(SearchViewModel::class.java)
-        searchViewModel.setSearchListener(object: SearchListener {
-            override fun searchFailure() {
-                Log.e("Search", "FAILURE")
-            }
-
-            override fun searchSuccess(results: ArrayList<Movie>) {
-                Log.d("Search", "Result count: ${results.size}")
-            }
-        })
 
         setHasOptionsMenu(true)
 
@@ -53,6 +46,7 @@ class SearchFragment : Fragment() {
         searchProgress = root.findViewById(R.id.search_loader)
         searchProgress.visibility = View.INVISIBLE
 
+        retryButton.visibility = View.GONE
         retryButton.setOnClickListener {
             searchViewModel.omdbSearch(title = "Lord of the rings", type = OmdbType.movie)
             searchViewModel.setSearchResults(arrayListOf())
@@ -77,6 +71,25 @@ class SearchFragment : Fragment() {
                 textView.visibility = View.VISIBLE
             }
             searchProgress.visibility = View.INVISIBLE
+        })
+
+        searchViewModel.setSearchListener(object: SearchListener {
+            override fun searchFailure() {
+                retryButton.visibility = View.VISIBLE
+            }
+
+            override fun searchSuccess(results: ArrayList<Movie>) {
+                Log.d("Search", "Result count: ${results.size}")
+            }
+        })
+
+        searchResultsAdapter.setClickListener(object: OnResultClickListener {
+            override fun resultClick(dataset: List<Movie>, position: Int) {
+                val detailIntent = Intent(context, ResultDetailActivity::class.java).apply {
+                    putExtra("movie", dataset[position])
+                }
+                startActivity(detailIntent)
+            }
         })
 
         return root
