@@ -9,12 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.github.kittinunf.fuel.core.FuelError
 import com.minutecode.flicky.R
 import com.minutecode.flicky.model.omdb.Movie
 
 class ResultDetailFragment : Fragment() {
+
+    private val TAG = "ResultDetailFragment"
 
     companion object {
         fun newInstance(arguments: Bundle): Fragment {
@@ -32,7 +33,23 @@ class ResultDetailFragment : Fragment() {
     ): View {
         val movie = arguments!!.getParcelable<Movie>("movie")
         viewModel = ViewModelProvider(this, ResultViewModelFactory(movie!!)).get(ResultDetailViewModel::class.java)
+        viewModel.setListener(object: ResultDetailListener {
+            override fun detailRetrieveSuccessful() {
+                Log.d(TAG, "")
+            }
 
+            override fun detailRetrieveFailure(error: FuelError) {
+                Log.d(TAG, "")
+            }
+
+            override fun addToLibrarySuccessful() {
+                Log.d(TAG, "")
+            }
+
+            override fun addToLibraryFailure(exception: Exception) {
+                Log.d(TAG, "")
+            }
+        })
         setHasOptionsMenu(true)
 
         val root = inflater.inflate(R.layout.result_detail_fragment, container, false)
@@ -69,18 +86,7 @@ class ResultDetailFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.add_movie_library -> {
-                Log.d("Add movie to library", "${viewModel.movie}")
-                Firebase.firestore
-                    .collection("Movies")
-                    .add(viewModel.movie.asHashMap())
-                    .addOnSuccessListener { docRef ->
-                        Log.d("Result Detail", "DocumentSnapshot added with ID: ${docRef.id}")
-                    }
-                    .addOnFailureListener { e ->
-                        Log.w("Result Detail", "Error adding document", e)
-                    }
-            }
+            R.id.add_movie_library -> viewModel.addResultToLibrary()
         }
         return true
     }

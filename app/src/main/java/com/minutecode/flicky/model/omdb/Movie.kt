@@ -4,7 +4,13 @@ import android.os.Parcel
 import android.os.Parcelable
 import org.json.JSONObject
 
-data class Movie(val title: String, val year: Int, val imdbId: String, val type: OmdbType, val poster: String): Parcelable {
+open class Movie(
+    open val title: String,
+    open val year: Int,
+    open val imdbId: String,
+    open val type: OmdbType,
+    open val poster: String): Parcelable {
+
     constructor(parcel: Parcel) : this(
         title = parcel.readString() ?: "NULL",
         year = parcel.readInt(),
@@ -28,7 +34,7 @@ data class Movie(val title: String, val year: Int, val imdbId: String, val type:
         parcel.writeString(poster)
     }
 
-    fun asHashMap(): HashMap<String, Any> {
+    open fun asHashMap(): HashMap<String, Any> {
         return hashMapOf(
             "title" to title,
             "year" to year,
