@@ -42,7 +42,7 @@ class SearchResultAdapter(private var dataSet: ArrayList<Movie>): RecyclerView.A
             .into(holder.resultPoster)
 
         holder.itemView.setOnClickListener {
-            clickListener.resultClick(dataSet, position)
+            clickListener.resultClick(dataSet, position, holder.itemView)
         }
     }
 
@@ -61,5 +61,5 @@ class SearchResultAdapter(private var dataSet: ArrayList<Movie>): RecyclerView.A
 }
 
 interface OnResultClickListener {
-    fun resultClick(dataset: List<Movie>, position: Int)
+    fun resultClick(dataset: List<Movie>, position: Int, view: View)
 }

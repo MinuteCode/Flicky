@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
+import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -86,11 +87,12 @@ class SearchFragment : Fragment() {
         })
 
         searchResultsAdapter.setClickListener(object: OnResultClickListener {
-            override fun resultClick(dataset: List<Movie>, position: Int) {
+            override fun resultClick(dataset: List<Movie>, position: Int, view: View) {
                 val detailIntent = Intent(context, ResultDetailActivity::class.java).apply {
                     putExtra("movie", dataset[position])
                 }
-                startActivity(detailIntent)
+                val options = ActivityOptionsCompat.makeScaleUpAnimation(view, view.left, view.top, view.width, view.height)
+                startActivity(detailIntent, options.toBundle())
             }
         })
 

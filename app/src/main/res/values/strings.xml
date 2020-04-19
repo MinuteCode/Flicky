@@ -12,6 +12,7 @@
     <string name="result_detail_activity_title">Détails</string>
     <string name="plot_title">Plot</string>
     <string name="add_movie_library">Add to library</string>
+    <string name="add_library_success">Movie added to your library !</string>
     <plurals name="number_of_genres">
         <item quantity="one">Genre</item>
         <item quantity="other">Genres</item>
@@ -22,4 +23,7 @@
     <string name="password">Mot de passe</string>
     <string name="connection">Connexion</string>
     <string name="register">Créer le compte</string>
+
+    <!-- General purpose -->
+    <string name="undo">Undo</string>
 </resources>

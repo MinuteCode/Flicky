@@ -38,6 +38,15 @@ class ResultDetailFragment : Fragment() {
     ): View {
         val movie = arguments!!.getParcelable<Movie>("movie")
         viewModel = ViewModelProvider(this, ResultViewModelFactory(movie!!)).get(ResultDetailViewModel::class.java)
+
+        val root = inflater.inflate(R.layout.result_detail_fragment, container, false)
+        val movieTitle: TextView = root.findViewById(R.id.movie_title)
+        val movieYear: TextView = root.findViewById(R.id.movie_year)
+        val moviePoster: ImageView = root.findViewById(R.id.movie_poster)
+        val moviePlot: TextView = root.findViewById(R.id.movie_plot)
+        val genreLayout: LinearLayout = root.findViewById(R.id.genre_layout)
+
+
         viewModel.setListener(object: ResultDetailListener {
             override fun detailRetrieveSuccessful() {
                 Log.d(TAG, "")
@@ -48,7 +57,10 @@ class ResultDetailFragment : Fragment() {
             }
 
             override fun addToLibrarySuccessful() {
-                Log.d(TAG, "")
+                Snackbar
+                    .make(root, getText(R.string.add_library_success), Snackbar.LENGTH_SHORT)
+                    .setAction(getText(R.string.undo)) {}
+                    .show()
             }
 
             override fun addToLibraryFailure(exception: Exception) {
@@ -56,13 +68,6 @@ class ResultDetailFragment : Fragment() {
             }
         })
         setHasOptionsMenu(true)
-
-        val root = inflater.inflate(R.layout.result_detail_fragment, container, false)
-        val movieTitle: TextView = root.findViewById(R.id.movie_title)
-        val movieYear: TextView = root.findViewById(R.id.movie_year)
-        val moviePoster: ImageView = root.findViewById(R.id.movie_poster)
-        val moviePlot: TextView = root.findViewById(R.id.movie_plot)
-        val genreLayout: LinearLayout = root.findViewById(R.id.genre_layout)
 
         viewModel.movieTitle.observe(viewLifecycleOwner, Observer {
             movieTitle.text = it

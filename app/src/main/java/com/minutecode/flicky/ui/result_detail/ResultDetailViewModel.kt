@@ -104,7 +104,7 @@ class ResultDetailViewModel(var movie: FullMovie) : ViewModel() {
     private fun canAddMovieToLibrary(): Boolean {
         var canAdd = true
         firestore.collection("Users")
-            .whereEqualTo("d", FirebaseAuth.getInstance().currentUser!!.uid)
+            .whereEqualTo("authId", FirebaseAuth.getInstance().currentUser!!.uid)
             .whereArrayContains("movies", movie.asHashMap())
             .get()
             .addOnSuccessListener { query ->

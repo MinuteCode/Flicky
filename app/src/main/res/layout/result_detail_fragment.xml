@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/resultdetail"
+    android:id="@+id/result_detail_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.result_detail.ResultDetailActivity">
@@ -48,6 +48,7 @@
                 android:layout_marginTop="16dp"
                 android:scaleType="center"
                 android:src="@android:drawable/ic_menu_report_image"
+                android:transitionName="movie_poster"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
