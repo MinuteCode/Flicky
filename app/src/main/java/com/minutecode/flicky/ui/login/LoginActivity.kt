@@ -5,57 +5,76 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseUser
 import com.minutecode.flicky.MainActivity
 import com.minutecode.flicky.R
-import com.minutecode.flicky.model.user.User
 
 class LoginActivity : AppCompatActivity() {
     private val TAG = "LoginActivity"
-    private lateinit var firebaseAuth: FirebaseAuth
-    private val firestore = Firebase.firestore
+
+    private lateinit var viewModel: LoginViewModel
+
+    private lateinit var emailEditText: TextInputEditText
+    private lateinit var passwordEditText: TextInputEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        firebaseAuth = FirebaseAuth.getInstance()
+        viewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
+        viewModel.setListener(object: LoginActivityListener {
+            override fun onRegisterSuccess(user: FirebaseUser) {
+                startMainActivity()
+            }
+
+            override fun onRegisterFailure(exception: Exception) {
+                Snackbar
+                    .make(
+                        findViewById(R.id.login_main_view), "User creation failed : ${exception.message ?: "No exception message"}", Snackbar.LENGTH_SHORT)
+                    .show()
+            }
+
+            override fun onUserAddedToDB() {
+                Snackbar
+                    .make(
+                        findViewById(R.id.login_main_view), "User added to DB, Welcome !", Snackbar.LENGTH_SHORT)
+                    .show()
+            }
+
+            override fun onUserAdditionFailure(e: Exception) {
+                Log.e(TAG, e.message)
+            }
+
+            override fun onLoginSuccess() {
+                startMainActivity()
+            }
+        })
 
         val connectButton: Button = findViewById(R.id.login_button)
         val registerButton: Button = findViewById(R.id.register_button)
-        val emailEditText: TextInputEditText = findViewById(R.id.email_field)
-        val passwordEditText: TextInputEditText = findViewById(R.id.password_field)
+        emailEditText = findViewById(R.id.email_field)
+        passwordEditText = findViewById(R.id.password_field)
 
         connectButton.setOnClickListener {
-            startMainActivity()
+            try {
+                checkLoginCredentials(emailEditText)
+                checkLoginCredentials(passwordEditText)
+                viewModel.login(emailEditText.text.toString(), passwordEditText.text.toString())
+            } catch (e: LoginException) {
+                Snackbar
+                    .make(findViewById(R.id.login_main_view), e.message!!, Snackbar.LENGTH_LONG)
+                    .show()
+            }
         }
 
         registerButton.setOnClickListener {
             try {
                 checkLoginCredentials(emailEditText)
                 checkLoginCredentials(passwordEditText)
-                firebaseAuth
-                    .createUserWithEmailAndPassword(emailEditText.text.toString(), passwordEditText.text.toString())
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            Firebase.firestore.collection("Users")
-                                .document(task.result!!.user!!.uid)
-                                .set(User(task.result!!.user!!.uid, setOf(), null, null, null))
-                            startMainActivity()
-                        } else {
-                            Snackbar
-                                .make(
-                                    findViewById(R.id.login_main_view),
-                                    "User creation failed : ${task.exception?.message ?: "No exception message"}",
-                                    Snackbar.LENGTH_SHORT)
-                                .show()
-                            Log.e(TAG, task.exception?.message ?: "User creation no exception message")
-                        }
-                    }
+                viewModel.registerUser(emailEditText.text.toString(), passwordEditText.text.toString())
             } catch (e : LoginException) {
                 Snackbar.make(
                     findViewById(R.id.login_main_view),
@@ -70,31 +89,12 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        firebaseAuth.currentUser?.let { user ->
-            firestore.collection("Users")
-                .document(FirebaseAuth.getInstance().currentUser!!.uid)
-                .get()
-                .addOnSuccessListener { snapshot ->
-                    if (!snapshot.exists()) {
-                        firestore.collection("Users")
-                            .document(FirebaseAuth.getInstance().currentUser!!.uid)
-                            .set(
-                                User(
-                                    user.uid,
-                                    setOf(),
-                                    user.displayName,
-                                    user.email,
-                                    user.phoneNumber
-                                ).storeFormat)
-                            .addOnCompleteListener {
-                                if (it.isSuccessful) {
-                                    startMainActivity()
-                                }
-                            }
-                    } else {
-                        startMainActivity()
-                    }
-                }
+        try {
+            viewModel.login()
+        } catch (e: LoginException) {
+            Snackbar
+                .make(findViewById(R.id.login_main_view), e.message!!, Snackbar.LENGTH_LONG)
+                .show()
         }
     }
 
