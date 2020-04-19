@@ -5,7 +5,6 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -27,6 +26,8 @@ class SearchFragment : Fragment() {
     private lateinit var searchViewModel: SearchViewModel
     private lateinit var searchResultsRecyclerView: RecyclerView
     private lateinit var searchProgress: ProgressBar
+
+    private var queryAllowed = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,11 +76,12 @@ class SearchFragment : Fragment() {
 
         searchViewModel.setSearchListener(object: SearchListener {
             override fun searchFailure() {
+                queryAllowed = true
                 retryButton.visibility = View.VISIBLE
             }
 
             override fun searchSuccess(results: ArrayList<Movie>) {
-                Log.d("Search", "Result count: ${results.size}")
+                queryAllowed = true
             }
         })
 
@@ -116,7 +118,10 @@ class SearchFragment : Fragment() {
                     searchProgress.visibility = View.VISIBLE
                     searchResultsRecyclerView.scrollToPosition(0)
                     query?.let {
-                        searchViewModel.omdbSearch(title = it, type = OmdbType.movie)
+                        if (queryAllowed) {
+                            searchViewModel.omdbSearch(title = it, type = OmdbType.movie)
+                            queryAllowed = false
+                        }
                     }
                     return true
                 }
