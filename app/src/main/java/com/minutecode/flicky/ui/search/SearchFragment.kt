@@ -12,6 +12,8 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityOptionsCompat
+import androidx.core.util.Pair
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -91,7 +93,12 @@ class SearchFragment : Fragment() {
                 val detailIntent = Intent(context, ResultDetailActivity::class.java).apply {
                     putExtra("movie", dataset[position])
                 }
-                val options = ActivityOptionsCompat.makeScaleUpAnimation(view, view.left, view.top, view.width, view.height)
+                val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    activity!!,
+                    Pair(view.findViewById(R.id.result_image), ViewCompat.getTransitionName(view.findViewById(R.id.result_image))),
+                    Pair(view.findViewById(R.id.result_title), ViewCompat.getTransitionName(view.findViewById(R.id.result_title))),
+                    Pair(view.findViewById(R.id.search_result_line), ViewCompat.getTransitionName(view.findViewById(R.id.search_result_line)))
+                )
                 startActivity(detailIntent, options.toBundle())
             }
         })

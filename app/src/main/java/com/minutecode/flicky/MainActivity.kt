@@ -1,6 +1,7 @@
 package com.minutecode.flicky
 
 import android.os.Bundle
+import android.transition.Fade
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -22,5 +23,13 @@ class MainActivity : AppCompatActivity() {
             R.id.navigation_search, R.id.navigation_dashboard, R.id.navigation_notifications))
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        val fade = Fade()
+        fade.excludeTarget(R.id.action_bar_container, true)
+        fade.excludeTarget(android.R.id.statusBarBackground, true)
+        fade.excludeTarget(android.R.id.navigationBarBackground, true)
+
+        window.enterTransition = fade
+        window.exitTransition = fade
     }
 }

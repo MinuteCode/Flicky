@@ -15,7 +15,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:transitionName="result_background">
 
             <TextView
                 android:id="@+id/movie_year"
@@ -36,6 +37,7 @@
                 android:textIsSelectable="true"
                 android:textSize="24sp"
                 android:textStyle="bold"
+                android:transitionName="movie_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/movie_poster"
                 app:layout_constraintTop_toTopOf="@+id/movie_poster" />

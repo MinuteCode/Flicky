@@ -1,9 +1,8 @@
 package com.minutecode.flicky.ui.result_detail
 
 import android.os.Bundle
+import android.transition.Fade
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.minutecode.flicky.R
 
 class ResultDetailActivity : AppCompatActivity() {
@@ -12,7 +11,13 @@ class ResultDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.result_detail_activity)
 
-        val db = Firebase.firestore
+        val fade = Fade()
+        fade.excludeTarget(R.id.action_bar_container, true)
+        fade.excludeTarget(android.R.id.statusBarBackground, true)
+        fade.excludeTarget(android.R.id.navigationBarBackground, true)
+
+        window.enterTransition = fade
+        window.exitTransition = fade
 
         if (savedInstanceState == null) {
             val movieBundle = Bundle()
