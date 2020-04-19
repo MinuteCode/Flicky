@@ -52,6 +52,7 @@ class SearchResultAdapter(private var dataSet: ArrayList<Movie>): RecyclerView.A
 
     fun setDataSet(to: ArrayList<Movie>) {
         dataSet = to
+        notifyDataSetChanged()
     }
 
     fun setClickListener(listener: OnResultClickListener) {

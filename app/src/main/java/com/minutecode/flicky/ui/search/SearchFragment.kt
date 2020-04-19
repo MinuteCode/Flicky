@@ -65,8 +65,8 @@ class SearchFragment : Fragment() {
         searchViewModel.searchResults.observe(viewLifecycleOwner, Observer {
             if (it.isNotEmpty()) {
                 textView.visibility = View.INVISIBLE
+                searchResultsRecyclerView.scheduleLayoutAnimation()
                 searchResultsAdapter.setDataSet(it)
-                searchResultsAdapter.notifyDataSetChanged()
             } else {
                 textView.visibility = View.VISIBLE
             }
@@ -114,6 +114,7 @@ class SearchFragment : Fragment() {
                     val inputMethodManager = activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                     inputMethodManager.hideSoftInputFromWindow(searchView.windowToken, 0)
                     searchProgress.visibility = View.VISIBLE
+                    searchResultsRecyclerView.scrollToPosition(0)
                     query?.let {
                         searchViewModel.omdbSearch(title = it, type = OmdbType.movie)
                     }
