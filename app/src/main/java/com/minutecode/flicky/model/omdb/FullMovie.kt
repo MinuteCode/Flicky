@@ -9,12 +9,12 @@ import java.util.*
 
 
 open class FullMovie(
-    override val title: String,
-    override val year: Int,
-    override val imdbId: String,
-    override val type: OmdbType,
-    override val poster: String) : Movie(title, year, imdbId, type, poster) {
-    var genre: Set<String> = setOf() //TODO: Map the genres to an OmdbGenre
+    title: String,
+    year: Int,
+    imdbId: String,
+    type: OmdbType,
+    poster: String) : Movie(title, year, imdbId, type, poster) {
+    var genre: List<String> = listOf() //TODO: Map the genres to an OmdbGenre
         get() = field
     var rated: String = ""
         get() = field
@@ -32,11 +32,11 @@ open class FullMovie(
         get() = field
     var language: List<String> = arrayListOf()
         get() = field
-    var country: Set<String> = setOf()
+    var country: List<String> = listOf()
         get() = field
     var awards: String = ""
         get() = field
-    var ratings: List<Pair<String, String>> = arrayListOf()
+    var ratings: List<Rating> = arrayListOf()
         get() = field
     var metascore: Int? = null
         get() = field
@@ -53,7 +53,9 @@ open class FullMovie(
     var website: String = ""
         get() = field
 
-    constructor(genre: Set<String>,
+    constructor(): this("", 0, "", OmdbType.movie, "")
+
+    constructor(genre: List<String>,
                 rated: String,
                 releaseDate: Date?,
                 runtime: Int,
@@ -62,9 +64,9 @@ open class FullMovie(
                 actors: List<String>,
                 plot: String,
                 language: List<String>,
-                country: Set<String>,
+                country: List<String>,
                 awards: String,
-                ratings: List<Pair<String, String>>,
+                ratings: List<Rating>,
                 metascore: Int?,
                 imdbRating: Float,
                 imdbVotes: Int,
@@ -96,7 +98,7 @@ open class FullMovie(
 
     @SuppressLint("SimpleDateFormat")
     constructor(json: JSONObject, movie: Movie) : this(
-        genre = HashSet<String>(json.getString("Genre").split(",")),
+        genre = json.getString("Genre").split(","),
         rated = json.getString("Rated"),
         releaseDate = SimpleDateFormat("dd MMM YYYY").parse(json.getString("Released")),
         runtime = json.getString("Runtime").replace(" min", "").toInt(),
@@ -107,20 +109,17 @@ open class FullMovie(
         },
         plot = json.getString("Plot"),
         language = json.getString("Language").split(","),
-        country = json.getString("Country").split(",").let {
-            val countries: MutableSet<String> = mutableSetOf()
-            for (country: String in it) { countries.add(country) }
-            countries
-        },
+        country = json.getString("Country").split(","),
         awards = json.getString("Awards"),
         ratings = json.getJSONArray("Ratings").let { jsonArray: JSONArray ->
-            val ratings: ArrayList<Pair<String, String>> = arrayListOf()
+            val ratings: ArrayList<Rating> = arrayListOf()
             for (index in 0 until jsonArray.length()) {
-                val ratingPair = Pair<String, String>(
-                    jsonArray.getJSONObject(index).getString("Source"),
-                    jsonArray.getJSONObject(index).getString("Value")
+                ratings.add(
+                    Rating(
+                        jsonArray.getJSONObject(index).getString("Source"),
+                        jsonArray.getJSONObject(index).getString("Value")
+                    )
                 )
-                ratings.add(ratingPair)
             }
             ratings
         },

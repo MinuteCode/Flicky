@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="@dimen/elevation_lots">
+
+    <ImageView
+        android:id="@+id/movie_poster_hero"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_broken_image_black_24dp" />
+
+    <ImageView
+        android:id="@+id/movie_poster"
+        android:layout_width="80dp"
+        android:layout_height="125dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="137dp"
+        android:elevation="@dimen/elevation_lots"
+        android:outlineProvider="bounds"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/movie_poster_hero"
+        app:srcCompat="@drawable/ic_broken_image_black_24dp" />
+
+    <TextView
+        android:id="@+id/movie_info"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:alpha="1"
+        android:text="TextView"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/movie_poster"
+        app:layout_constraintTop_toBottomOf="@+id/movie_poster_hero" />
+
+    <TextView
+        android:id="@+id/movie_genres"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:alpha="1"
+        android:ellipsize="end"
+        android:lines="1"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/movie_info"
+        app:layout_constraintStart_toStartOf="@+id/movie_info"
+        app:layout_constraintTop_toBottomOf="@+id/movie_info" />
+
+    <TextView
+        android:id="@+id/movie_cast_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/cast"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/movie_poster"
+        app:layout_constraintTop_toBottomOf="@+id/movie_poster" />
+
+    <TextView
+        android:id="@+id/movie_cast"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/movie_cast_title"
+        app:layout_constraintTop_toBottomOf="@+id/movie_cast_title" />
+
+    <FrameLayout
+        android:id="@+id/movie_cast_separator"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="8dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toBottomOf="@+id/movie_cast_title"
+        app:layout_constraintEnd_toEndOf="@+id/movie_cast"
+        app:layout_constraintStart_toEndOf="@+id/movie_cast_title"
+        app:layout_constraintTop_toTopOf="@+id/movie_cast_title">
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/movie_plot_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/plot_title"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/movie_cast"
+        app:layout_constraintTop_toBottomOf="@+id/movie_cast" />
+
+    <FrameLayout
+        android:id="@+id/movie_plot_separator"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="8dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toBottomOf="@+id/movie_plot_title"
+        app:layout_constraintEnd_toEndOf="@+id/movie_cast_separator"
+        app:layout_constraintStart_toEndOf="@+id/movie_plot_title"
+        app:layout_constraintTop_toTopOf="@+id/movie_plot_title">
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/movie_plot"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:ellipsize="end"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/movie_cast"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/movie_plot_title"
+        app:layout_constraintTop_toBottomOf="@+id/movie_plot_title"
+        app:layout_constraintVertical_bias="0.961" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

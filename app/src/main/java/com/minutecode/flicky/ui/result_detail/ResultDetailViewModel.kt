@@ -44,10 +44,10 @@ class ResultDetailViewModel(var movie: FullMovie) : ViewModel() {
     }
     var moviePlot: LiveData<String> = _moviePlot
 
-    private var _movieGenres = MutableLiveData<Set<String>>().apply {
-        value = setOf("")
+    private var _movieGenres = MutableLiveData<List<String>>().apply {
+        value = listOf("")
     }
-    var movieGenre: LiveData<Set<String>> = _movieGenres
+    var movieGenre: LiveData<List<String>> = _movieGenres
 
     fun setListener(listener: ResultDetailListener) {
         this.listener = listener

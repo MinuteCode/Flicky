@@ -24,7 +24,7 @@ class LoginViewModel: ViewModel() {
                 if (task.isSuccessful) {
                     Firebase.firestore.collection("Users")
                         .document(task.result!!.user!!.uid)
-                        .set(User(task.result!!.user!!.uid, setOf(), null, null, null))
+                        .set(User(task.result!!.user!!.uid, listOf(), null, null, null))
                     listener.onRegisterSuccess(task.result!!.user!!)
                 } else {
                     listener.onRegisterFailure(task.exception!!)
@@ -40,7 +40,7 @@ class LoginViewModel: ViewModel() {
                 .get()
                 .addOnSuccessListener { snapshot ->
                     if (!snapshot.exists()) {
-                        addUserToDB(User(user.uid, setOf(), null, null, null))
+                        addUserToDB(User(user.uid, listOf(), null, null, null))
                     } else {
                         listener.onLoginSuccess()
                         Log.i(TAG, "User found in the DB")

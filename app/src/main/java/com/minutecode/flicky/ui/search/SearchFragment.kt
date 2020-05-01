@@ -103,6 +103,8 @@ class SearchFragment : Fragment() {
             }
         })
 
+        searchViewModel.getLoggedUser()
+
         return root
     }
 
